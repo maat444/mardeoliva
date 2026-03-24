@@ -1,0 +1,325 @@
+:root {
+    --bg-pastel-1: #fdfcf0;
+    /* Crema */
+    --bg-pastel-2: #f0bfcf;
+    /* Lavanda suave */
+    --bg-pastel-3: #b3ecb3;
+    /* Menta */
+    --bg-pastel-4: #c2dcf3;
+    /* Alice Blue */
+    --bg-pastel-5: #fa9afa;
+
+    --webkit-scrollbar-color: #4ca9ff;
+
+    /* Seashell */
+    --primary-font: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-pastel-2) var(--bg-pastel-1);
+}
+
+body {
+    font-family: var(--primary-font);
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Permitir desplazamiento vertical, evitar horizontal */
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: var(--bg-pastel-1);
+    transition: background-color 2s ease-in-out;
+}
+
+/* Custom Scrollbar (WebKit) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-pastel-1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-pastel-2);
+    border-radius: 10px;
+    border: 2px solid var(--bg-pastel-1);
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+    background-color: var(--webkit-scrollbar-color) !important;
+}
+
+/* Animación de fondo pastel */
+@keyframes pastelCycle {
+    0% {
+        background-color: var(--bg-pastel-1);
+    }
+
+    25% {
+        background-color: var(--bg-pastel-2);
+    }
+
+    50% {
+        background-color: var(--bg-pastel-3);
+    }
+
+    75% {
+        background-color: var(--bg-pastel-4);
+    }
+
+    100% {
+        background-color: var(--bg-pastel-5);
+    }
+}
+
+body.animate-bg {
+    animation: pastelCycle 8s infinite linear alternate;
+}
+
+/* Header */
+.main-header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    z-index: 20;
+    background: rgba(175, 243, 237, 0.032);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(179, 226, 253, 0.952);
+}
+
+.main-header h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    color: #4c92ee;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    position: relative;
+    display: inline-block;
+}
+
+/* Corazones laterales que no alteran el flujo del contenedor */
+.main-header h1::before,
+.main-header h1::after {
+    content: '❤';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff69b4;
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.main-header h1::before {
+    left: -40px;
+}
+
+.main-header h1::after {
+    right: -40px;
+}
+
+/* Contenedor de la Galería */
+.content-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    max-width: 400px;
+    /* En móvil se limita a uno */
+    position: relative;
+    z-index: 10;
+    transition: all 0.5s ease;
+}
+
+.gallery-container {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.3);
+    border: 8px solid rgba(250, 218, 242, 0.2);
+}
+
+.desktop-only {
+    display: none;
+}
+
+.gallery-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.gallery-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-item.active {
+    opacity: 1;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Asegura que la imagen se vea completa */
+    object-position: center;
+    /* Centrado horizontal y vertical */
+    background-color: transparent;
+    /* Quitar fondo gris para lucir la transparencia del card */
+    transform: scale(1.0);
+    transform-origin: center center;
+    /* El zoom crece desde el centro */
+    transition: transform 8s linear;
+}
+
+/* Efecto Ken Burns (Zoom suave central) */
+.gallery-item.active img {
+    transform: scale(1.1);
+    /* Zoom ligero centrado */
+}
+
+/* Corazones Flotantes */
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    font-size: 20px;
+    opacity: 0.7;
+    animation: floatHeart 10s linear infinite;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Botón Flotante */
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgb(241, 176, 238);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: #ff69b4;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+}
+
+.floating-btn.playing {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.7);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 105, 180, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
+    }
+}
+
+/* Responsive fixes */
+@media (max-width: 480px) {
+    .content-wrapper {
+        width: 85%;
+        margin-top: 60px;
+    }
+
+    .main-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Desktop specific adjustments */
+@media (min-width: 1024px) {
+    body {
+        justify-content: flex-start;
+        /* Alinear arriba */
+        padding-top: 20px;
+    }
+
+    .main-header {
+        position: relative;
+        /* Ya no flota sobre el contenido */
+        background: transparent;
+        backdrop-filter: none;
+        border-bottom: none;
+        margin-bottom: 20px;
+    }
+
+    .content-wrapper {
+        margin-top: 0;
+        max-width: 1200px;
+        width: 90%;
+    }
+
+    .gallery-container {
+        flex: 1;
+        max-width: 350px;
+    }
+
+    .desktop-only {
+        display: block;
+    }
+}

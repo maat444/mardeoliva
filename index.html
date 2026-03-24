@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>María Oliva Correa</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <!-- Precarga de tipografía moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Dancing+Script:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Favicon de Afecto (Corazón Rosado) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 85c-20-15-40-30-40-45 0-10 8-18 18-18 8 0 15 5 22 12 7-7 14-12 22-12 10 0 18 8 18 18 0 15-20 30-40 45z' fill='%23ff69b4'/></svg>">
+</head>
+
+<body>
+    <header class="main-header">
+        <h1 id="person-name">María Oliva Correa</h1>
+    </header>
+
+    <main class="content-wrapper">
+        <!-- Tres contenedores para la versión desktop, solo uno visible en móvil -->
+        <div id="gallery-1" class="gallery-container"></div>
+        <div id="gallery-2" class="gallery-container desktop-only"></div>
+        <div id="gallery-3" class="gallery-container desktop-only"></div>
+    </main>
+
+    <div id="hearts-container" class="hearts-container"></div>
+
+    <!-- Canvas para confeti detrás de la tarjeta -->
+    <canvas id="bg-confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5;"></canvas>
+
+    <button id="audio-toggle" class="floating-btn" aria-label="Reproducir música">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+        </svg>
+    </button>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
