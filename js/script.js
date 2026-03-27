@@ -102,7 +102,17 @@ function initGallery(containerId) {
         img.alt = `Momento ${index + 1}`;
         // Lazy loading nativo para las que no son la primera
         if (index > 0) img.loading = "lazy";
-        
+
+        // Detectar si la imagen no es 9:16 para aplicar fondo semitrasparente
+        img.onload = () => {
+            const ratio = img.naturalWidth / img.naturalHeight;
+            const targetRatio = 9 / 16;
+            // Si la diferencia es mayor a un margen de tolerancia (ej: 0.05), marcamos el contenedor
+            if (Math.abs(ratio - targetRatio) > 0.05) {
+                item.classList.add('ratio-mismatch');
+            }
+        };
+
         img.onerror = () => {
             img.src = `https://picsum.photos/seed/${index + (containerId === 'gallery-1' ? 42 : 100)}/800/1400`;
         };
@@ -141,7 +151,7 @@ function initGallery(containerId) {
         if (currentActive) {
             // Limpiar clases 'previous' anteriores (si quedara alguna)
             container.querySelectorAll('.gallery-item.previous').forEach(el => el.classList.remove('previous'));
-            
+
             // Marcar actual como previous
             currentActive.classList.remove('active');
             currentActive.classList.add('previous');
@@ -230,7 +240,7 @@ function launchConfetti() {
  * Genera corazones flotantes aleatorios
  */
 function createHearts() {
-    const heartColors = ['#ffb6c1', '#ff69b4', '#ff1493', '#ffa07a', '#ffc0cb'];
+    const heartColors = ['#ffb6c1', '#ff69b4', '#ff1493', '#f5f3a5ff', '#aee8f7ff', '#4dcef5ff', '#ffa07a', '#ffc0cb'];
 
     setInterval(() => {
         const heart = document.createElement('span');
@@ -289,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth > 768) {
             const g2 = document.getElementById('gallery-2');
             const g3 = document.getElementById('gallery-3');
-            
+
             // Solo inicializamos si están vacíos para evitar duplicados
             if (g2 && g2.children.length === 0) {
                 initGallery('gallery-2');
