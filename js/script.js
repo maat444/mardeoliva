@@ -17,7 +17,7 @@ const images = [
     't (17).webp', 't (18).webp', 't (19).webp', 't (20).webp',
     't (21).webp', 't (22).webp', 't (23).webp', 't (24).webp',
     't (25).webp', 't (26).webp', 't (27).webp', 't (28).webp',
-    't (29).webp', 't (30).webp', 't (31).webp', 't (32).webp',
+    't (29).webp', 't (30).webp', 't (31).webp',
     't (33).webp', 't (34).webp', 't (35).webp', 't (36).webp',
     't (37).webp', 't (38).webp', 't (39).webp', 't (40).webp',
     't (41).webp', 't (42).webp', 't (43).webp', 't (44).webp',
