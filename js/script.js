@@ -113,27 +113,57 @@ function initGallery(containerId) {
     }
 
     // Inicializar con la primera imagen
-    createGalleryItem(0);
+    const firstItem = createGalleryItem(0);
+    // Ya está 'active' por la lógica de createGalleryItem, pero asegurémonos
+    firstItem.classList.add('active');
+
+    // Pre-cargar la SEGUNDA imagen inmediatamente
+    if (shuffledImages.length > 1) {
+        createGalleryItem(1);
+    }
 
     // Función interna para cambiar imagen en este contenedor
     function nextImage() {
         const items = container.querySelectorAll('.gallery-item');
         if (shuffledImages.length === 0) return;
 
-        // Quitar active de la actual
-        items[currentIndex].classList.remove('active');
-        
-        // Calcular siguiente índice
-        currentIndex = (currentIndex + 1) % shuffledImages.length;
+        const currentActive = container.querySelector('.gallery-item.active');
+        const nextIndex = (currentIndex + 1) % shuffledImages.length;
+        let nextItem = items[nextIndex];
 
-        // Si el elemento para el siguiente índice no existe, lo creamos ahora
-        if (currentIndex >= items.length) {
-            createGalleryItem(currentIndex);
+        // Si por alguna razón no existe el siguiente (no debería pasar por el preload), lo creamos
+        if (!nextItem) {
+            nextItem = createGalleryItem(nextIndex);
         }
 
-        // Mostrar la siguiente (ahora garantizada que existe)
-        const allItems = container.querySelectorAll('.gallery-item');
-        allItems[currentIndex].classList.add('active');
+        // Antes de activar la siguiente, nos aseguramos que la actual se marque como 'previous'
+        // Esto la mantiene debajo con opacidad 1 mientras la nueva hace su fade-in arriba.
+        if (currentActive) {
+            // Limpiar clases 'previous' anteriores (si quedara alguna)
+            container.querySelectorAll('.gallery-item.previous').forEach(el => el.classList.remove('previous'));
+            
+            // Marcar actual como previous
+            currentActive.classList.remove('active');
+            currentActive.classList.add('previous');
+        }
+
+        // Activar la nueva imagen (comienza su fade-in arriba gracias al z-index en CSS)
+        nextItem.classList.add('active');
+        currentIndex = nextIndex;
+
+        // Limpiar el estado 'previous' después de que la transición haya terminado
+        // El CSS tiene 2s, usamos un pequeño margen extra
+        setTimeout(() => {
+            if (currentActive) {
+                currentActive.classList.remove('previous');
+            }
+        }, 2100);
+
+        // Pre-cargar la SIGUIENTE (la que vendrá después de esta que acabamos de mostrar)
+        const preloadIndex = (currentIndex + 1) % shuffledImages.length;
+        if (!container.querySelectorAll('.gallery-item')[preloadIndex]) {
+            createGalleryItem(preloadIndex);
+        }
 
         // Solo lanzamos confeti desde la galería principal para no saturar
         if (containerId === 'gallery-1') {
@@ -254,12 +284,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar la galería principal siempre
     initGallery('gallery-1');
 
-    // Inicializar galerías laterales solo en desktop (> 768px)
-    // Esto asegura que en móvil solo se cargue 1 imagen inicialmente
-    if (window.innerWidth > 768) {
-        initGallery('gallery-2');
-        initGallery('gallery-3');
-    }
+    // Función para verificar e inicializar galerías laterales si es necesario
+    const checkLateralGalleries = () => {
+        if (window.innerWidth > 768) {
+            const g2 = document.getElementById('gallery-2');
+            const g3 = document.getElementById('gallery-3');
+            
+            // Solo inicializamos si están vacíos para evitar duplicados
+            if (g2 && g2.children.length === 0) {
+                initGallery('gallery-2');
+            }
+            if (g3 && g3.children.length === 0) {
+                initGallery('gallery-3');
+            }
+        }
+    };
+
+    // Ejecutar al cargar
+    checkLateralGalleries();
+
+    // Y ejecutar al redimensionar la ventana (para casos de DevTools)
+    window.addEventListener('resize', checkLateralGalleries);
 
     createHearts();
     body.classList.add('animate-bg');
