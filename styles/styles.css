@@ -32,11 +32,12 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Siempre al principio para el scroll */
     align-items: center;
     position: relative;
     background-color: var(--bg-pastel-1);
     transition: background-color 2s ease-in-out;
+    padding-bottom: 50px; /* Margen inferior general */
 }
 
 /* Custom Scrollbar (WebKit) */
@@ -88,15 +89,16 @@ body.animate-bg {
 
 /* Header */
 .main-header {
-    position: absolute;
+    position: relative;
     top: 0;
     width: 100%;
     padding: 20px;
     text-align: center;
     z-index: 20;
-    background: rgba(175, 243, 237, 0.032);
-    backdrop-filter: blur(5px);
-    border-bottom: 1px solid rgba(179, 226, 253, 0.952);
+    background: rgba(255, 255, 255, 0.5); /* Más visible */
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 192, 203, 0.3);
+    margin-bottom: 10px; /* Separación mínima */
 }
 
 .main-header h1 {
@@ -190,17 +192,22 @@ body.animate-bg {
     object-position: center;
     /* Centrado horizontal y vertical */
     background-color: transparent;
-    /* Quitar fondo gris para lucir la transparencia del card */
     transform: scale(1.0);
     transform-origin: center center;
-    /* El zoom crece desde el centro */
-    transition: transform 8s linear;
 }
 
-/* Efecto Ken Burns (Zoom suave central) */
+/* Efecto Ken Burns (Zoom suave central) mediante animación */
+@keyframes zoomEffect {
+    from {
+        transform: scale(1.0);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}
+
 .gallery-item.active img {
-    transform: scale(1.1);
-    /* Zoom ligero centrado */
+    animation: zoomEffect 9s ease-out forwards;
 }
 
 /* Corazones Flotantes */
@@ -282,8 +289,8 @@ body.animate-bg {
 /* Responsive fixes */
 @media (max-width: 480px) {
     .content-wrapper {
-        width: 85%;
-        margin-top: 60px;
+        width: 90%;
+        margin-top: 5px; /* Reducido ya que el header es relativo */
     }
 
     .main-header h1 {
@@ -295,13 +302,11 @@ body.animate-bg {
 @media (min-width: 1024px) {
     body {
         justify-content: flex-start;
-        /* Alinear arriba */
-        padding-top: 20px;
+        padding-top: 0; /* Header relativo maneja el espacio */
+        padding-bottom: 40px; /* Espacio para scroll al final */
     }
 
     .main-header {
-        position: relative;
-        /* Ya no flota sobre el contenido */
         background: transparent;
         backdrop-filter: none;
         border-bottom: none;

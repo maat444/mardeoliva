@@ -79,41 +79,61 @@ function shuffle(array) {
 }
 
 /**
- * Inicializa una galería individual
+ * Inicializa una galería individual de forma perezosa (Lazy Loading)
  */
 function initGallery(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // Barajar imágenes para esta galería específica
+    // Barajar TODAS las imágenes para esta galería, pero no cargarlas aún
     const shuffledImages = shuffle(images);
     let currentIndex = 0;
 
     container.innerHTML = '';
-    shuffledImages.forEach((src, index) => {
+
+    // Crear solo la PRIMERA imagen inmediatamente
+    function createGalleryItem(index) {
         const item = document.createElement('div');
         item.classList.add('gallery-item');
         if (index === 0) item.classList.add('active');
 
         const img = document.createElement('img');
-        img.src = imageFolder + src;
+        img.src = imageFolder + shuffledImages[index];
         img.alt = `Momento ${index + 1}`;
+        // Lazy loading nativo para las que no son la primera
+        if (index > 0) img.loading = "lazy";
+        
         img.onerror = () => {
             img.src = `https://picsum.photos/seed/${index + (containerId === 'gallery-1' ? 42 : 100)}/800/1400`;
         };
 
         item.appendChild(img);
         container.appendChild(item);
-    });
+        return item;
+    }
+
+    // Inicializar con la primera imagen
+    createGalleryItem(0);
 
     // Función interna para cambiar imagen en este contenedor
     function nextImage() {
         const items = container.querySelectorAll('.gallery-item');
-        if (items.length === 0) return;
+        if (shuffledImages.length === 0) return;
 
+        // Quitar active de la actual
         items[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % items.length;
-        items[currentIndex].classList.add('active');
+        
+        // Calcular siguiente índice
+        currentIndex = (currentIndex + 1) % shuffledImages.length;
+
+        // Si el elemento para el siguiente índice no existe, lo creamos ahora
+        if (currentIndex >= items.length) {
+            createGalleryItem(currentIndex);
+        }
+
+        // Mostrar la siguiente (ahora garantizada que existe)
+        const allItems = container.querySelectorAll('.gallery-item');
+        allItems[currentIndex].classList.add('active');
 
         // Solo lanzamos confeti desde la galería principal para no saturar
         if (containerId === 'gallery-1') {
@@ -231,10 +251,15 @@ audioBtn.addEventListener('click', () => {
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar las 3 galerías
+    // Inicializar la galería principal siempre
     initGallery('gallery-1');
-    initGallery('gallery-2');
-    initGallery('gallery-3');
+
+    // Inicializar galerías laterales solo en desktop (> 768px)
+    // Esto asegura que en móvil solo se cargue 1 imagen inicialmente
+    if (window.innerWidth > 768) {
+        initGallery('gallery-2');
+        initGallery('gallery-3');
+    }
 
     createHearts();
     body.classList.add('animate-bg');
