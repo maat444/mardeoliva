@@ -243,9 +243,15 @@ function createHearts() {
     const heartColors = ['#ffb6c1', '#ff69b4', '#ff1493', '#f5f3a5ff', '#aee8f7ff', '#4dcef5ff', '#ffa07a', '#ffc0cb'];
 
     setInterval(() => {
-        const heart = document.createElement('span');
+        const heart = document.createElement('div');
         heart.classList.add('heart');
-        heart.innerHTML = '❤';
+
+        // Usamos SVG en lugar de emoji para asegurar consistencia de colores en iOS/iPhone
+        heart.innerHTML = `
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <path d="M50 85C30 70 10 55 10 40 10 30 18 22 28 22 36 22 43 27 50 34 57 27 64 22 72 22 82 22 90 30 90 40 90 55 70 70 50 85Z" />
+            </svg>
+        `;
 
         const randomLeft = Math.random() * 100;
         const randomSize = Math.random() * (30 - 15) + 15;
@@ -253,9 +259,15 @@ function createHearts() {
         const randomColor = heartColors[Math.floor(Math.random() * heartColors.length)];
 
         heart.style.left = `${randomLeft}vw`;
-        heart.style.fontSize = `${randomSize}px`;
+        heart.style.width = `${randomSize}px`;
+        heart.style.height = `${randomSize}px`;
         heart.style.animationDuration = `${randomDuration}s`;
-        heart.style.color = randomColor;
+        
+        // Aplicar el color elegido al relleno del SVG
+        const path = heart.querySelector('path');
+        if (path) {
+            path.setAttribute('fill', randomColor);
+        }
 
         heartsContainer.appendChild(heart);
 

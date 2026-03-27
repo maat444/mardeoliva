@@ -251,10 +251,13 @@ body.animate-bg {
 
 .heart {
     position: absolute;
-    bottom: -50px;
-    font-size: 20px;
-    opacity: 0.7;
+    bottom: -80px;
+    opacity: 0.8;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
     animation: floatHeart 10s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @keyframes floatHeart {
